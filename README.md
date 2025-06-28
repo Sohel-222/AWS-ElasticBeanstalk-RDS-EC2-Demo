@@ -18,7 +18,7 @@ Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amaz
 
 ## 🏗️ Architecture Diagram
 
-![Architecture](AWS-ElasticBeanstalk-RDS-EC2-Demo/project_ss/architecture.jpeg)
+![Architecture](./project_ss/architecture.jpeg)
 
 ---
 
@@ -33,7 +33,7 @@ Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amaz
   - Enabled database creation inside **same VPC**.
 - ✅ Successfully launched the Beanstalk app.
 
-📸 ![Beanstalk App](./Screenshot%20(98).png)
+📸 ![Beanstalk App](./project_ss/Beanstalk_RDS-config.png)
 
 ---
 
@@ -45,7 +45,7 @@ Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amaz
 - Verified database status as `Available`.
 - ✅ Ensured security group allows access only from Beanstalk and EC2.
 
-📸 ![RDS Available](./Screenshot%20(99).png)
+📸 ![RDS Available](./project_ss/RDS-console.png)
 
 ---
 
@@ -61,7 +61,7 @@ Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amaz
   mysql -h <RDS-ENDPOINT> -u root -p
   ```
 
-📸 ![EC2 MySQL](./Screenshot%202025-06-17%20134254.jpg)
+📸 ![EC2 MySQL](./project_ss/mysql-vai-ec2cli.jpg)
 
 ---
 
@@ -97,9 +97,9 @@ cursor.close()
 conn.close()
 ```
 
-📸 ![MySQL Script Execution](./Screenshot%202025-06-17%20141504.jpg)
+📸 ![MySQL Script Execution](./project_ss/MS-Sql_Scrip_Exec.jpg)
 
-📸 ![Python Output](./Screenshot%202025-06-17%20141544.jpg)
+📸 ![Python Output](./project_ss/test_script_op.jpg)
 
 ---
 
@@ -115,23 +115,19 @@ aws ssm put-parameter --name "/db/username" --value "root" --type "SecureString"
 aws ssm put-parameter --name "/db/password" --value "root1234" --type "SecureString"
 ```
 
-📸 ![SSM Parameters](./Screenshot%202025-06-17%20140041.jpg)
+📸 ![SSM Parameters](./project_ss/ssm-parameter.jpg)
+
+📸 ![SSM Parameters via Console](./project_ss/ssm-para_via_console.png)
 
 ---
 
 ## 📸 Screenshots Summary
 
 ✅ Elastic Beanstalk Deployment Success  
-![EB Welcome](./Screenshot%20(98).png)
+![EB Welcome](./project_ss/elastickbeanstalk-deploy.png)
 
-✅ RDS Database Available  
-![RDS Available](./Screenshot%20(99).png)
-
-✅ MySQL Connected via EC2 CLI  
-![EC2 MySQL](./Screenshot%202025-06-17%20134254.jpg)
-
-✅ Python Test Script Output  
-![Python Output](./Screenshot%202025-06-17%20141544.jpg)
+✅ EC2 Instnce Created by Elastic Beanstalk  
+![EC2](./project_ss/Ec2-lauchbyBeanstalk.png)
 
 ---
 
@@ -145,10 +141,3 @@ This project helped me gain hands-on experience with:
 
 ---
 
-## 📁 Repo Name Suggestion
-
-```
-aws-elasticbeanstalk-rds-ec2-demo
-```
-
-> 🔄 You can enhance this setup by using **CloudWatch alarms**, **auto-scaling**, or **IAM roles** for tighter access control in production.
