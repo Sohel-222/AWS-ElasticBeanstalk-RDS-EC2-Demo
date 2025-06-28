@@ -18,8 +18,7 @@ Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amaz
 
 ## 🏗️ Architecture Diagram
 
-![Architecture](AWS-ElasticBeanstalk-RDS-EC2-Demo
-/project_ss/architecture.jpeg)
+![Architecture](AWS-ElasticBeanstalk-RDS-EC2-Demo/project_ss/architecture.jpeg)
 
 ---
 
