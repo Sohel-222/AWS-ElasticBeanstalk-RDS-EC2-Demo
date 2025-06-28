@@ -1,74 +1,154 @@
-# Project 1: Using AWS Elastic Beanstalk to Set Up RDS and Access It from an EC2 Instance
 
-## 📌 Objective
+# 🛠️ Project 1: Using AWS Elastic Beanstalk to Set Up RDS and Access It from an EC2 Instance
 
-This project demonstrates how to:
-- Deploy a web application using **AWS Elastic Beanstalk**
-- Provision and configure an integrated **Amazon RDS (MySQL)** database
-- Access the RDS instance from a separate **EC2 instance** within the same **VPC**
-- Securely store RDS credentials using **AWS Systems Manager Parameter Store**
-- Perform database operations via a **Python script** from the EC2 instance
+## 🎯 Objective
+Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amazon RDS (MySQL)** database within the same VPC, and access it securely from a **separate EC2 instance**.
 
 ---
 
-## 🧱 Architecture Diagram
-
-![Architecture Diagram](./architecture.png)
-
-> This diagram shows:
-- Elastic Beanstalk environment with integrated RDS (MySQL)
-- EC2 instance (manually launched)
-- VPC, Subnet, and Security Group configuration to enable secure access
-
----
-
-## 🚀 Technologies & Tools
-
-- **AWS Elastic Beanstalk**
-- **Amazon RDS (MySQL)**
-- **Amazon EC2**
-- **Amazon VPC, Subnets, Security Groups**
-- **AWS Systems Manager (SSM)**
-- **MySQL client / Python Connector**
+## 🧰 Technologies & Tools
+- AWS Elastic Beanstalk
+- Amazon RDS (MySQL)
+- Amazon EC2
+- VPC/Subnet/Security Groups
+- AWS Systems Manager (SSM) Parameter Store
+- Python + mysql-connector
 
 ---
 
-## ⚙️ Project Setup Guide
+## 🏗️ Architecture Diagram
 
-### 1. Elastic Beanstalk Setup
+![Architecture](./architecture.png)
 
-- Created an **Elastic Beanstalk environment** (`InternshipProject-env`)
-- Platform: Python (Preconfigured)
+---
+
+## 🚀 Step-by-Step Setup
+
+### 1. Elastic Beanstalk Environment Setup
+- Created an **Elastic Beanstalk environment** with a sample Python web app.
 - During environment creation:
-  - Enabled the **RDS database** option
-  - Chose `MySQL` engine with version `8.0.41`
-  - Set instance type as `db.t3.micro` with 5 GB storage
-  - Made sure it was in the same **VPC** as the EC2
+  - Selected `MySQL` as the RDS engine.
+  - Instance Class: `db.t3.micro`
+  - Storage: `5 GB`
+  - Enabled database creation inside **same VPC**.
+- ✅ Successfully launched the Beanstalk app.
 
-📸 ![Beanstalk RDS Config](./Screenshot\ \(94\).png)
+📸 ![Beanstalk App](./Screenshot%20(98).png)
 
 ---
 
-### 2. RDS Database Configuration
+### 2. RDS Configuration
+- RDS Instance created by Elastic Beanstalk:
+  - Engine: MySQL 8.0.41
+  - Class: db.t3.small
+  - Region & AZ: us-east-1b
+- Verified database status as `Available`.
+- ✅ Ensured security group allows access only from Beanstalk and EC2.
 
-- The RDS DB (`awseb-e-ixuepimter-stack-awsebrdsdatabase-*`) was auto-created
-- Engine: MySQL Community
-- Availability Zone: `us-east-1b`
-- Class: `db.t3.small`
-- Public access **disabled** for better security
-- Security group rules allowed only:
-  - Elastic Beanstalk EC2 instance
-  - Manually created EC2 instance
-
-📸 ![RDS Console](./Screenshot\ \(99\).png)
+📸 ![RDS Available](./Screenshot%20(99).png)
 
 ---
 
 ### 3. EC2 Instance Setup
-
-- Launched a **separate EC2 instance**
-- Installed:
+- Launched an EC2 instance in same VPC.
+- SSH’d into instance and installed MySQL client:
   ```bash
   sudo apt update
-  sudo apt install mysql-client python3-pip
-  pip install mysql-connector-python
+  sudo apt install mysql-client
+  ```
+- Connected to RDS using:
+  ```bash
+  mysql -h <RDS-ENDPOINT> -u root -p
+  ```
+
+📸 ![EC2 MySQL](./Screenshot%202025-06-17%20134254.jpg)
+
+---
+
+## 4. 🛢️ Database Connection & Testing
+
+- Created and connected to DB `test`
+- Created table:
+  ```sql
+  CREATE TABLE demo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+  );
+  ```
+- Inserted data and fetched it using Python:
+
+```python
+import mysql.connector
+
+conn = mysql.connector.connect(
+    host="awseb-e-ixuepimter-stack-awsebrdsdatabase-72qhw0fgdyfa.cgvoq8uyiakt.us-east-1.rds.amazonaws.com",
+    user="root",
+    password="root1234",
+    database="test"
+)
+
+cursor = conn.cursor()
+cursor.execute("INSERT INTO demo VALUES (3, 'Test Entry')")
+cursor.execute("SELECT * FROM demo")
+for row in cursor.fetchall():
+    print(row)
+
+cursor.close()
+conn.close()
+```
+
+📸 ![MySQL Script Execution](./Screenshot%202025-06-17%20141504.jpg)
+
+📸 ![Python Output](./Screenshot%202025-06-17%20141544.jpg)
+
+---
+
+## 🔐 Security Considerations
+
+- Created custom security groups:
+  - Allowed MySQL (port 3306) **only** from EC2 and Beanstalk
+  - **No public access** to RDS instance
+- Used **AWS SSM Parameter Store** to securely store DB credentials:
+
+```bash
+aws ssm put-parameter --name "/db/username" --value "root" --type "SecureString"
+aws ssm put-parameter --name "/db/password" --value "root1234" --type "SecureString"
+```
+
+📸 ![SSM Parameters](./Screenshot%202025-06-17%20140041.jpg)
+
+---
+
+## 📸 Screenshots Summary
+
+✅ Elastic Beanstalk Deployment Success  
+![EB Welcome](./Screenshot%20(98).png)
+
+✅ RDS Database Available  
+![RDS Available](./Screenshot%20(99).png)
+
+✅ MySQL Connected via EC2 CLI  
+![EC2 MySQL](./Screenshot%202025-06-17%20134254.jpg)
+
+✅ Python Test Script Output  
+![Python Output](./Screenshot%202025-06-17%20141544.jpg)
+
+---
+
+## ✅ Conclusion
+
+This project helped me gain hands-on experience with:
+- Deploying applications using **Elastic Beanstalk**
+- Managing RDS databases inside a **VPC**
+- Secure access from **EC2**
+- Using **SSM Parameter Store** for secrets
+
+---
+
+## 📁 Repo Name Suggestion
+
+```
+aws-elasticbeanstalk-rds-ec2-demo
+```
+
+> 🔄 You can enhance this setup by using **CloudWatch alarms**, **auto-scaling**, or **IAM roles** for tighter access control in production.
