@@ -18,7 +18,7 @@ Deploy a sample application using **AWS Elastic Beanstalk**, provision an **Amaz
 
 ## 🏗️ Architecture Diagram
 
-![Architecture](./architecture.png)
+![Architecture](.project_ss/architechture.jpg)
 
 ---
 
